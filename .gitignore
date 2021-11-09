@@ -14,3 +14,6 @@ FileReader_teszt/test2.dat
 FileReader_teszt/test2.txt
 
 FileReader_teszt/testsadfsasafsafsafasfsadf.dat
+/EDF_FileReader/build/
+
+*.bdf

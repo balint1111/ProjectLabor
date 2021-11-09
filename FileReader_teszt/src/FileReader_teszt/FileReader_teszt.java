@@ -19,7 +19,7 @@ import java.util.Random;
 public final class FileReader_teszt
 {
     public static final int PAGE_SIZE = 1024 * 4;
-    public static final long FILE_SIZE = PAGE_SIZE * 2000 * 1000L;
+    public static final long FILE_SIZE = PAGE_SIZE * 2000 * 3000L;
     public static final String FILE_NAME = "test.txt";
     public static final byte[] BLANK_PAGE = new byte[PAGE_SIZE];
 
