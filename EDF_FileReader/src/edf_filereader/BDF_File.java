@@ -6,16 +6,12 @@ package edf_filereader;
 
 import edf_filereader.data.Channel;
 import edf_filereader.data.Sample;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,9 +20,10 @@ import java.util.logging.Logger;
  *
  * @author balin
  */
-public class EDF_Reader {
+public class BDF_File {
 
-    byte[] bytes;
+    
+    FileChannel fileChannel;
 
     String filename;
     Integer headerType;
@@ -54,13 +51,13 @@ public class EDF_Reader {
     Integer startData;
     Integer dataRecordSize;
 
-    public EDF_Reader(String filename) {
+    public BDF_File(String filename) {
         this.filename = filename;
 
         try {
-            bytes = Files.readAllBytes(Paths.get(filename));
+            fileChannel = new FileInputStream(filename).getChannel();
         } catch (IOException ex) {
-            Logger.getLogger(EDF_Reader.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BDF_File.class.getName()).log(Level.SEVERE, null, ex);
         }
         readHeader();
     }
@@ -84,7 +81,11 @@ public class EDF_Reader {
     public void readHeader() {
 
         try {
-
+            ByteBuffer buffer = ByteBuffer.allocate(256);
+            
+            fileChannel.read(buffer, 0);
+            byte[] bytes = buffer.array();
+            
             headerType = Integer.valueOf(bytes[0]);
 
             patient = new String(bytes, 8, 80, "US-ASCII");
@@ -97,7 +98,11 @@ public class EDF_Reader {
             durationOfDataRecord = Integer.parseInt(new String(bytes, 244, 8, "US-ASCII").trim());
             numberOfChannels = Integer.parseInt(new String(bytes, 252, 4, "US-ASCII").trim());
 
-            int start = 256;
+            buffer = ByteBuffer.allocate(256*numberOfChannels);
+            fileChannel.read(buffer, 256);
+            bytes = buffer.array();
+            
+            int start = 0;
             int dataLength = 16;
             labelsOfTheChannels = readStrings(start, dataLength, bytes);
             start += (dataLength * numberOfChannels);
@@ -137,7 +142,7 @@ public class EDF_Reader {
             dataLength = 32;
             start += (dataLength * numberOfChannels);
 
-            startData = start;
+            startData = (numberOfChannels+1)*256;
 
             dataRecordSize = 0;
             for (int i = 0; i < numberOfChannels; i++) {
@@ -145,26 +150,41 @@ public class EDF_Reader {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(EDF_Reader.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BDF_File.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     
-    public Channel getChannel(int channelNumber) {
+    public Channel getChannel(int channelNumber) throws IOException {
         Channel channel = new Channel();
-
+        
+        channel.setLabel(labelsOfTheChannels.get(channelNumber));
+        channel.setTransducerType(transducerTypes.get(channelNumber));
+        channel.setPhysicalDimension(physicalDimensionOfChannels.get(channelNumber));
+        channel.setPhysicalMinimum(physicalMinimums.get(channelNumber));
+        channel.setPhysicalMaximum(physicalMaximums.get(channelNumber));
+        channel.setDigitalMinimum(digitalMinimums.get(channelNumber));
+        channel.setDigitalMaximum(digitalMaximums.get(channelNumber));
+        channel.setPrefiltering(prefilterings.get(channelNumber));
+        channel.calculateValues();
+        
         int dataLength = 3;
         int n = numberOfSamples.get(channelNumber);
         int startInRecord = getStartInRecord(channelNumber);
         int i;
         for (int dataRecordNumber = 0; dataRecordNumber < numberOfDataRecords; dataRecordNumber++) {
             int start = startData + dataRecordNumber * dataRecordSize + startInRecord;
-            for (i = start; i < start + (dataLength * n); i += dataLength) {
-                channel.add(new Sample(bytes[i], bytes[i + 1], bytes[i + 2]));
+            int end =start + (dataLength * n);
+            
+            ByteBuffer buffer = ByteBuffer.allocate(dataLength*n);
+            fileChannel.read(buffer, start);
+            for (i = 0; i < buffer.limit(); i += dataLength) {
+                channel.add(new Sample(buffer.get(i), buffer.get(i + 1), buffer.get(i + 2)));
             }
         }
         return channel;
     }
+    
 
     private Integer getStartInRecord(int channelNumber) {
         int startInRecord = 0;

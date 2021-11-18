@@ -959,11 +959,15 @@ public class EDFreader {
 
                 buf[i] |= file_in.readByte() << 8;
             } else {
-                buf[i] = file_in.readUnsignedByte();
-
-                buf[i] |= file_in.readUnsignedByte() << 8;
-
-                buf[i] |= file_in.readByte() << 16;
+                int first = file_in.readUnsignedByte();
+                buf[i] = first;
+                int secound = file_in.readUnsignedByte();
+                buf[i] |= secound << 8;
+                int third = file_in.readByte();
+                buf[i] |= third << 16;
+//                System.out.println("first "+ first);
+//                System.out.println("secound "+ secound);
+//                System.out.println("third "+ third);
             }
 
             sample_pntr++;

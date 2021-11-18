@@ -30,8 +30,16 @@ public class Sample {
         Integer value = 0;
         value |= data[0] & 0xFF;
         value |= (data[1] & 0xFF) << 8;
-        value |= (data[2] & 0xFF) << 16;
+        value |= (data[2]) << 16;
         return value;
+    }
+    
+    public Double getDoubleValue(double bitvalue, double offset) {
+        int value = 0;
+        value |= data[0] & 0xFF;
+        value |= (data[1] & 0xFF) << 8;
+        value |= (data[2] & 0xFF) << 16;
+        return bitvalue * (offset + (double) value);
     }
     
     @Override

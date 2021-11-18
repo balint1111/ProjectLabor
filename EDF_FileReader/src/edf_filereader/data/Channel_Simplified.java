@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author balin
  */
-public class Channel {
+public class Channel_Simplified {
 
     String label;
     String transducerType;
@@ -21,47 +21,63 @@ public class Channel {
     Integer digitalMinimum;
     Integer digitalMaximum;
     String prefiltering;
+    Integer numberOfSamples;
+    Integer storedRecordsOfTheChannel;
     double bitvalue;
     double offset;
 
-    List<Sample> samples;
-
-    public Channel(List<Sample> samples) {
-        this.samples = samples;
+    public byte[] samples;
+    
+    public Channel_Simplified(){
+        
     }
 
-    public Channel() {
-        this.samples = new ArrayList<>();
-    }
-
-    public void add(Sample sample) {
-        samples.add(sample);
-    }
-
-    public void addAll(List<Sample> samples) {
-        samples.addAll(samples);
-    }
-
-    public Sample getSample(int i) {
-        return samples.get(i);
-    }
-
-    public List<Sample> getSamplesFromTo(int from, int to) {
-        return samples.subList(from, to);
-    }
-
-    public int size() {
-        return samples.size();
-    }
-
-    public int[] getIntArray() {
-        return samples.stream().map(Sample::getIntegerValue).toList().stream().mapToInt(i -> i).toArray();
+    public Channel_Simplified(String label, 
+            String transducerType,
+            String physicalDimension,
+            Integer physicalMinimum,
+            Integer physicalMaximum,
+            Integer digitalMinimum,
+            Integer digitalMaximum,
+            String prefiltering, 
+            Integer numberOfSamples, 
+            Integer storedRecordsOfTheChannel) {
+        this.label = label;
+        this.transducerType = transducerType;
+        this.physicalDimension = physicalDimension;
+        this.physicalMinimum = physicalMinimum;
+        this.physicalMaximum = physicalMaximum;
+        this.digitalMinimum = digitalMinimum;
+        this.digitalMaximum = digitalMaximum;
+        this.prefiltering = prefiltering;
+        this.numberOfSamples = numberOfSamples;
+        this.storedRecordsOfTheChannel = storedRecordsOfTheChannel;
+        samples = new byte[numberOfSamples*storedRecordsOfTheChannel*3];
+        calculateValues();
     }
     
-    public double [] getDoubleArray() {
-        return samples.stream().map((t) -> {
-            return t.getDoubleValue(bitvalue, offset);
-        }).toList().stream().mapToDouble(d -> d).toArray();
+    public int[] getIntArray(){
+        int [] arr = new int[samples.length/3];
+        for (int i = 0; i < samples.length; i+= 3) {
+            Integer value = 0;
+            value |= samples[i] & 0xFF;
+            value |= (samples[i + 1] & 0xFF) << 8;
+            value |= (samples[i + 2] ) << 16;
+            arr[i/3] = value;
+        }
+        return arr;
+    }
+    
+    public double [] getDoubleArray(){
+        double [] arr = new double[samples.length/3];
+        for (int i = 0; i < samples.length; i+= 3) {
+            Integer value = 0;
+            value |= samples[i] & 0xFF;
+            value |= (samples[i + 1] & 0xFF) << 8;
+            value |= (samples[i + 2] ) << 16;
+            arr[i/3] = bitvalue * (offset + (double) value);
+        }
+        return arr;
     }
 
     public void calculateValues() {

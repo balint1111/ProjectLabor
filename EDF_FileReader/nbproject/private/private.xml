@@ -3,8 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/balin/Documents/NetBeansProjects/EDF_FileReader/src/edf_filereader/Reader.java</file>
-            <file>file:/C:/Users/balin/Documents/NetBeansProjects/EDF_FileReader/src/edf_filereader/EDF_FileReader.java</file>
+            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/BDF_File_Simplified.java</file>
+            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/EEG_Class.java</file>
+            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/Test.java</file>
+            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/data/ContinuousData.java</file>
+            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/Main.java</file>
         </group>
     </open-files>
 </project-private>
