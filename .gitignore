@@ -17,3 +17,4 @@ FileReader_teszt/testsadfsasafsafsafasfsadf.dat
 /EDF_FileReader/build/
 
 *.bdf
+/EDF_FileReader/dist/

@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="02b6402a-0612-4494-95b6-3d568a904ab8" name="Changes" comment="" />
+    <list default="true" id="02b6402a-0612-4494-95b6-3d568a904ab8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/Secound.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/data/ChannelSimple.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EDF_FileReader/nbproject/private/private.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../EDF_FileReader/nbproject/private/private.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EDF_FileReader/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../EDF_FileReader/nbproject/private/private.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EDF_FileReader/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../EDF_FileReader/nbproject/project.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/EDF_FileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/EDF_FileReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/EDF_Reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/EDF_Reader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/EDFreader.java" beforeDir="false" afterPath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/EDFreader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/data/Channel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/data/Channel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/data/DataRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/data/ContinuousData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/data/Sample.java" beforeDir="false" afterPath="$PROJECT_DIR$/../EDF_FileReader/src/edf_filereader/data/Sample.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FileReader_teszt/FileReader_teszt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileReader_teszt/FileReader_teszt.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,6 +45,7 @@
       <option name="presentableId" value="Default" />
       <updated>1634137921557</updated>
       <workItem from="1634137922865" duration="80000" />
+      <workItem from="1636761549784" duration="11000" />
     </task>
     <servers />
   </component>
