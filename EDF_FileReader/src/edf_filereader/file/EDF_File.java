@@ -1,18 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package edf_filereader;
+package edf_filereader.file;
 
 import edf_filereader.data.ContinuousData;
 import edf_filereader.data.Channel;
-import edf_filereader.header.BDF_Header;
+import edf_filereader.header.EDF_Header;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,42 +14,27 @@ import java.util.logging.Logger;
  *
  * @author balin
  */
-public class BDF_File extends EEG_File{
+public class EDF_File extends EEG_File{
     
-    private static final int SAMPLE_LENGTH = 3;
+    private static final int SAMPLE_LENGTH = 2;
 
     
-    public BDF_File(String filename) {
-        header= new BDF_Header();
+    public EDF_File(String filename) throws FileNotFoundException {
+        header= new EDF_Header();
         header.setFilename(filename);
 
-        try {
-            header.setFileChannel(new FileInputStream(filename).getChannel());
-        } catch (IOException ex) {
-            Logger.getLogger(BDF_File.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        header.setFileChannel(new FileInputStream(filename).getChannel());
+        
         readHeader();
     }
     
-    public BDF_Header getHeader() {
-        return (BDF_Header) header;
+    @Override
+    public EDF_Header getHeader() {
+        return (EDF_Header) header;
     }
 
-    private List<Integer> readASCII_Integers(int start, int dataLength, byte[] bytes) throws UnsupportedEncodingException {
-        List<Integer> returnList = new ArrayList<>();
-        for (int i = start; i < start + (dataLength * header.getNumberOfChannels()); i += dataLength) {
-            returnList.add(Integer.parseInt(new String(bytes, i, dataLength, "US-ASCII").trim()));
-        }
-        return returnList;
-    }
-
-    private List<String> readStrings(int start, int dataLength, byte[] bytes) throws UnsupportedEncodingException {
-        List<String> returnList = new ArrayList<>();
-        for (int i = start; i < start + (dataLength * header.getNumberOfChannels()); i += dataLength) {
-            returnList.add(new String(bytes, i, dataLength, "US-ASCII").trim());
-        }
-        return returnList;
-    }
+    
 
     @Override
     public void readHeader() {
@@ -75,7 +54,7 @@ public class BDF_File extends EEG_File{
             getHeader().setNumberOfBytes(Integer.parseInt(new String(bytes, 184, 8, "US-ASCII").trim()));
             getHeader().setVersion(new String(bytes, 192, 44, "US-ASCII"));
             header.setNumberOfDataRecords(Integer.parseInt(new String(bytes, 236, 8, "US-ASCII").trim()));
-            getHeader().setDurationOfDataRecord(Integer.parseInt(new String(bytes, 244, 8, "US-ASCII").trim()));
+            getHeader().setDurationOfDataRecord(Double.parseDouble(new String(bytes, 244, 8, "US-ASCII").trim()));
             header.setNumberOfChannels(Integer.parseInt(new String(bytes, 252, 4, "US-ASCII").trim()));
 
             buffer = ByteBuffer.allocate(256 * header.getNumberOfChannels());
@@ -96,19 +75,19 @@ public class BDF_File extends EEG_File{
             start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 8;
-            header.setPhysicalMinimums(readASCII_Integers(start, dataLength, bytes));
+            header.setPhysicalMinimums(readASCII_Doubles(start, dataLength, bytes));
             start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 8;
-            header.setPhysicalMaximums(readASCII_Integers(start, dataLength, bytes));
+            header.setPhysicalMaximums(readASCII_Doubles(start, dataLength, bytes));
             start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 8;
-            header.setDigitalMinimums(readASCII_Integers(start, dataLength, bytes));
+            header.setDigitalMinimums(readASCII_Doubles(start, dataLength, bytes));
             start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 8;
-            header.setDigitalMaximums(readASCII_Integers(start, dataLength, bytes));
+            header.setDigitalMaximums(readASCII_Doubles(start, dataLength, bytes));
             start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 80;
@@ -131,7 +110,7 @@ public class BDF_File extends EEG_File{
             getHeader().setDataRecordSize(dataRecordSize);
 
         } catch (IOException ex) {
-            Logger.getLogger(BDF_File.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EDF_File.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

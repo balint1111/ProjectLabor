@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package edf_filereader.data;
 
 
@@ -14,10 +10,10 @@ public class Channel{
     String label;
     String transducerType;
     String physicalDimension;
-    Integer physicalMinimum;
-    Integer physicalMaximum;
-    Integer digitalMinimum;
-    Integer digitalMaximum;
+    Double physicalMinimum;
+    Double physicalMaximum;
+    Double digitalMinimum;
+    Double digitalMaximum;
     String prefiltering;
     Integer numberOfSamples;
     Integer storedRecordsOfTheChannel;
@@ -34,10 +30,10 @@ public class Channel{
     public Channel(String label, 
             String transducerType,
             String physicalDimension,
-            Integer physicalMinimum,
-            Integer physicalMaximum,
-            Integer digitalMinimum,
-            Integer digitalMaximum,
+            Double physicalMinimum,
+            Double physicalMaximum,
+            Double digitalMinimum,
+            Double digitalMaximum,
             String prefiltering, 
             Integer numberOfSamples, 
             Integer storedRecordsOfTheChannel,
@@ -113,35 +109,35 @@ public class Channel{
         this.physicalDimension = physicalDimension;
     }
 
-    public Integer getPhysicalMinimum() {
+    public Double getPhysicalMinimum() {
         return physicalMinimum;
     }
 
-    public void setPhysicalMinimum(Integer physicalMinimum) {
+    public void setPhysicalMinimum(Double physicalMinimum) {
         this.physicalMinimum = physicalMinimum;
     }
 
-    public Integer getPhysicalMaximum() {
+    public Double getPhysicalMaximum() {
         return physicalMaximum;
     }
 
-    public void setPhysicalMaximum(Integer physicalMaximum) {
+    public void setPhysicalMaximum(Double physicalMaximum) {
         this.physicalMaximum = physicalMaximum;
     }
 
-    public Integer getDigitalMinimum() {
+    public Double getDigitalMinimum() {
         return digitalMinimum;
     }
 
-    public void setDigitalMinimum(Integer digitalMinimum) {
+    public void setDigitalMinimum(Double digitalMinimum) {
         this.digitalMinimum = digitalMinimum;
     }
 
-    public Integer getDigitalMaximum() {
+    public Double getDigitalMaximum() {
         return digitalMaximum;
     }
 
-    public void setDigitalMaximum(Integer digitalMaximum) {
+    public void setDigitalMaximum(Double digitalMaximum) {
         this.digitalMaximum = digitalMaximum;
     }
 
