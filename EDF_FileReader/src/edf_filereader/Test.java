@@ -4,8 +4,8 @@
  */
 package edf_filereader;
 
-import edf_filereader.data.Channel_Simplified;
 import edf_filereader.data.ContinuousData;
+import edf_filereader.data.Channel;
 import java.io.IOException;
 
 /**
@@ -15,7 +15,7 @@ import java.io.IOException;
 public class Test {
 
     public static void testChannel(int cahannelNumber, String fileName) throws IOException, EDFreader.EDFException, InterruptedException {
-        EEG_Class myReader = EEG_Class.build("dsa.bdf");
+        EEG_File myReader = EEG_File.build("dsa.bdf");
         System.out.println(myReader.getClass());
         System.out.println(myReader.getHeader().getKeys());
         EDFreader edfReader = new EDFreader("dsa.bdf");
@@ -34,7 +34,7 @@ public class Test {
 
 
     public void testRecord() throws IOException, EDFreader.EDFException, InterruptedException {
-        EEG_Class myReader = EEG_Class.build("dsa.bdf");
+        EEG_File myReader = EEG_File.build("dsa.bdf");
         ContinuousData data = myReader.readRecordFromTo(0, myReader.getHeader().getNumberOfDataRecords());
 
         for (int cahannelNumber = 0; cahannelNumber < myReader.getHeader().getNumberOfChannels(); cahannelNumber++) {
@@ -56,12 +56,12 @@ public class Test {
        
         System.out.println("myReader");
         long currentTimeMillis = currentTimeMillis = System.currentTimeMillis();
-        EEG_Class myReader = EEG_Class.build(fileName);
+        EEG_File myReader = EEG_File.build(fileName);
         System.out.println(myReader.getClass());
         
-        Channel_Simplified[] channels = myReader.readRecordFromTo(0, myReader.getHeader().getNumberOfDataRecords()).channels;
+        Channel[] channels = myReader.readRecordFromTo(0, myReader.getHeader().getNumberOfDataRecords()).channels;
         
-        for (Channel_Simplified channel : channels) {
+        for (Channel channel : channels) {
             channel.getDoubleArray();
         }
 

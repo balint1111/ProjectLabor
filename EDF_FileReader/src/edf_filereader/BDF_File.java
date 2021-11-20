@@ -4,13 +4,13 @@
  */
 package edf_filereader;
 
+import edf_filereader.data.ContinuousData;
 import edf_filereader.data.Channel;
-import edf_filereader.data.Sample;
+import edf_filereader.header.BDF_Header;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,51 +20,30 @@ import java.util.logging.Logger;
  *
  * @author balin
  */
-public class BDF_File {
+public class BDF_File extends EEG_File{
+    
+    private static final int SAMPLE_LENGTH = 3;
 
     
-    FileChannel fileChannel;
-
-    String filename;
-    Integer headerType;
-    String patient;
-    String recording;
-    String startDate;
-    String startTime;
-    Integer numberOfBytes;
-    String version;
-    Integer headerSize;
-    Integer numberOfDataRecords;
-    Integer durationOfDataRecord;
-    Integer numberOfChannels;
-    List<String> labelsOfTheChannels;
-    List<String> transducerTypes;
-    List<String> physicalDimensionOfChannels;
-    List<Integer> physicalMinimums;
-    List<Integer> physicalMaximums;
-    List<Integer> digitalMinimums;
-    List<Integer> digitalMaximums;
-    List<String> prefilterings;
-    List<Integer> numberOfSamples;
-
-    List<Channel> channels;
-    Integer startData;
-    Integer dataRecordSize;
-
     public BDF_File(String filename) {
-        this.filename = filename;
+        header= new BDF_Header();
+        header.setFilename(filename);
 
         try {
-            fileChannel = new FileInputStream(filename).getChannel();
+            header.setFileChannel(new FileInputStream(filename).getChannel());
         } catch (IOException ex) {
             Logger.getLogger(BDF_File.class.getName()).log(Level.SEVERE, null, ex);
         }
         readHeader();
     }
+    
+    public BDF_Header getHeader() {
+        return (BDF_Header) header;
+    }
 
     private List<Integer> readASCII_Integers(int start, int dataLength, byte[] bytes) throws UnsupportedEncodingException {
         List<Integer> returnList = new ArrayList<>();
-        for (int i = start; i < start + (dataLength * numberOfChannels); i += dataLength) {
+        for (int i = start; i < start + (dataLength * header.getNumberOfChannels()); i += dataLength) {
             returnList.add(Integer.parseInt(new String(bytes, i, dataLength, "US-ASCII").trim()));
         }
         return returnList;
@@ -72,244 +51,152 @@ public class BDF_File {
 
     private List<String> readStrings(int start, int dataLength, byte[] bytes) throws UnsupportedEncodingException {
         List<String> returnList = new ArrayList<>();
-        for (int i = start; i < start + (dataLength * numberOfChannels); i += dataLength) {
+        for (int i = start; i < start + (dataLength * header.getNumberOfChannels()); i += dataLength) {
             returnList.add(new String(bytes, i, dataLength, "US-ASCII").trim());
         }
         return returnList;
     }
 
+    @Override
     public void readHeader() {
 
         try {
             ByteBuffer buffer = ByteBuffer.allocate(256);
-            
-            fileChannel.read(buffer, 0);
+
+            header.getFileChannel().read(buffer, 0);
             byte[] bytes = buffer.array();
-            
-            headerType = Integer.valueOf(bytes[0]);
 
-            patient = new String(bytes, 8, 80, "US-ASCII");
-            recording = new String(bytes, 88, 80, "US-ASCII");
-            startDate = new String(bytes, 168, 8, "US-ASCII");
-            startTime = new String(bytes, 176, 8, "US-ASCII");
-            numberOfBytes = Integer.parseInt(new String(bytes, 184, 8, "US-ASCII").trim());
-            version = new String(bytes, 192, 44, "US-ASCII");
-            numberOfDataRecords = Integer.parseInt(new String(bytes, 236, 8, "US-ASCII").trim());
-            durationOfDataRecord = Integer.parseInt(new String(bytes, 244, 8, "US-ASCII").trim());
-            numberOfChannels = Integer.parseInt(new String(bytes, 252, 4, "US-ASCII").trim());
+            getHeader().setHeaderType(Integer.valueOf(bytes[0]));
 
-            buffer = ByteBuffer.allocate(256*numberOfChannels);
-            fileChannel.read(buffer, 256);
+            getHeader().setPatient(new String(bytes, 8, 80, "US-ASCII"));
+            getHeader().setRecording(new String(bytes, 88, 80, "US-ASCII"));
+            getHeader().setStartDate(new String(bytes, 168, 8, "US-ASCII"));
+            getHeader().setStartTime(new String(bytes, 176, 8, "US-ASCII"));
+            getHeader().setNumberOfBytes(Integer.parseInt(new String(bytes, 184, 8, "US-ASCII").trim()));
+            getHeader().setVersion(new String(bytes, 192, 44, "US-ASCII"));
+            header.setNumberOfDataRecords(Integer.parseInt(new String(bytes, 236, 8, "US-ASCII").trim()));
+            getHeader().setDurationOfDataRecord(Integer.parseInt(new String(bytes, 244, 8, "US-ASCII").trim()));
+            header.setNumberOfChannels(Integer.parseInt(new String(bytes, 252, 4, "US-ASCII").trim()));
+
+            buffer = ByteBuffer.allocate(256 * header.getNumberOfChannels());
+            header.getFileChannel().read(buffer, 256);
             bytes = buffer.array();
-            
+
             int start = 0;
             int dataLength = 16;
-            labelsOfTheChannels = readStrings(start, dataLength, bytes);
-            start += (dataLength * numberOfChannels);
+            header.setLabelsOfTheChannels(readStrings(start, dataLength, bytes));
+            start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 80;
-            transducerTypes = readStrings(start, dataLength, bytes);
-            start += (dataLength * numberOfChannels);
+            header.setTransducerTypes(readStrings(start, dataLength, bytes));
+            start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 8;
-            physicalDimensionOfChannels = readStrings(start, dataLength, bytes);
-            start += (dataLength * numberOfChannels);
+            header.setPhysicalDimensionOfChannels(readStrings(start, dataLength, bytes));
+            start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 8;
-            physicalMinimums = readASCII_Integers(start, dataLength, bytes);
-            start += (dataLength * numberOfChannels);
+            header.setPhysicalMinimums(readASCII_Integers(start, dataLength, bytes));
+            start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 8;
-            physicalMaximums = readASCII_Integers(start, dataLength, bytes);
-            start += (dataLength * numberOfChannels);
+            header.setPhysicalMaximums(readASCII_Integers(start, dataLength, bytes));
+            start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 8;
-            digitalMinimums = readASCII_Integers(start, dataLength, bytes);
-            start += (dataLength * numberOfChannels);
+            header.setDigitalMinimums(readASCII_Integers(start, dataLength, bytes));
+            start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 8;
-            digitalMaximums = readASCII_Integers(start, dataLength, bytes);
-            start += (dataLength * numberOfChannels);
+            header.setDigitalMaximums(readASCII_Integers(start, dataLength, bytes));
+            start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 80;
-            prefilterings = readStrings(start, dataLength, bytes);
-            start += (dataLength * numberOfChannels);
+            header.setPrefilterings(readStrings(start, dataLength, bytes));
+            start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 8;
-            numberOfSamples = readASCII_Integers(start, dataLength, bytes);
-            start += (dataLength * numberOfChannels);
+            header.setNumberOfSamples(readASCII_Integers(start, dataLength, bytes));
+            start += (dataLength * header.getNumberOfChannels());
 
             dataLength = 32;
-            start += (dataLength * numberOfChannels);
+            start += (dataLength * header.getNumberOfChannels());
 
-            startData = (numberOfChannels+1)*256;
+            getHeader().setStartData((header.getNumberOfChannels() + 1) * 256);
 
-            dataRecordSize = 0;
-            for (int i = 0; i < numberOfChannels; i++) {
-                dataRecordSize += numberOfSamples.get(i) * 3;
+            int dataRecordSize = 0;
+            for (int i = 0; i < header.getNumberOfChannels(); i++) {
+                dataRecordSize += header.getNumberOfSample(i) * SAMPLE_LENGTH;
             }
+            getHeader().setDataRecordSize(dataRecordSize);
 
         } catch (IOException ex) {
             Logger.getLogger(BDF_File.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    
-    public Channel getChannel(int channelNumber) throws IOException {
-        Channel channel = new Channel();
-        
-        channel.setLabel(labelsOfTheChannels.get(channelNumber));
-        channel.setTransducerType(transducerTypes.get(channelNumber));
-        channel.setPhysicalDimension(physicalDimensionOfChannels.get(channelNumber));
-        channel.setPhysicalMinimum(physicalMinimums.get(channelNumber));
-        channel.setPhysicalMaximum(physicalMaximums.get(channelNumber));
-        channel.setDigitalMinimum(digitalMinimums.get(channelNumber));
-        channel.setDigitalMaximum(digitalMaximums.get(channelNumber));
-        channel.setPrefiltering(prefilterings.get(channelNumber));
-        channel.calculateValues();
-        
-        int dataLength = 3;
-        int n = numberOfSamples.get(channelNumber);
-        int startInRecord = getStartInRecord(channelNumber);
-        int i;
-        for (int dataRecordNumber = 0; dataRecordNumber < numberOfDataRecords; dataRecordNumber++) {
-            int start = startData + dataRecordNumber * dataRecordSize + startInRecord;
-            int end =start + (dataLength * n);
-            
-            ByteBuffer buffer = ByteBuffer.allocate(dataLength*n);
-            fileChannel.read(buffer, start);
-            for (i = 0; i < buffer.limit(); i += dataLength) {
-                channel.add(new Sample(buffer.get(i), buffer.get(i + 1), buffer.get(i + 2)));
-            }
-        }
+    @Override
+    public Channel getChannel(int channelNumber) throws IOException, InterruptedException {
+        Channel channel =  new Channel(header.getLabelsOfTheChannels(channelNumber),
+                header.getTransducerType(channelNumber),
+                header.getPhysicalDimensionOfChannel(channelNumber),
+                header.getPhysicalMinimum(channelNumber),
+                header.getPhysicalMaximum(channelNumber),
+                header.getDigitalMinimum(channelNumber),
+                header.getDigitalMaximum(channelNumber),
+                header.getPrefiltering(channelNumber),
+                header.getNumberOfSample(channelNumber),
+                header.getNumberOfDataRecords(),
+                SAMPLE_LENGTH);
+
+        readBytesToChannel(channelNumber, channel, 0, header.getNumberOfDataRecords());
+
         return channel;
     }
-    
+
+    private void readBytesToChannel(int channelNumber, Channel channel, int fromRecord, int toRecord) throws IOException {
+        int n = header.getNumberOfSample(channelNumber);
+        int startInRecord = getStartInRecord(channelNumber);
+        channel.data = new byte[(toRecord - fromRecord) * n * SAMPLE_LENGTH];
+        for (int dataRecordNumber = fromRecord; dataRecordNumber < toRecord; dataRecordNumber++) {
+            int start = getHeader().getStartData() + dataRecordNumber * getHeader().getDataRecordSize() + startInRecord;
+
+            ByteBuffer buffer = ByteBuffer.allocate(SAMPLE_LENGTH * n);
+            header.getFileChannel().read(buffer, start);
+            int offset = header.getNumberOfSample(channelNumber) * dataRecordNumber * SAMPLE_LENGTH;
+            buffer.get(0, channel.data, offset, buffer.limit());
+
+        }
+    }
+
+    @Override
+    public ContinuousData readRecordFromTo(int from, int to) throws IOException {
+        int length = to - from;
+        int start = getHeader().getStartData() + from * getHeader().getDataRecordSize();
+        ByteBuffer buffer = ByteBuffer.allocate(getHeader().getDataRecordSize() * (length));
+        header.getFileChannel().read(buffer, start);
+        System.out.println(SAMPLE_LENGTH);
+        ContinuousData data = new ContinuousData(length, header.getNumberOfChannels(), header.getLabelsOfTheChannels(), header.getTransducerTypes(),
+                header.getPhysicalDimensionOfChannels(), header.getPhysicalMinimums(), header.getPhysicalMaximums(),
+                header.getDigitalMinimums(), header.getDigitalMaximums(), header.getPrefilterings(), header.getNumberOfSamples(), SAMPLE_LENGTH);
+        
+        for (int channelNumber = 0; channelNumber < header.getNumberOfChannels(); channelNumber++) {
+            for (int recordNumber = 0; recordNumber < length; recordNumber++) {
+                int channelStart = recordNumber * getHeader().getDataRecordSize() + getStartInRecord(channelNumber);
+                int n = header.getNumberOfSample(channelNumber);
+                int offset = n * recordNumber * SAMPLE_LENGTH;
+                buffer.get(channelStart, data.channels[channelNumber].data, offset, SAMPLE_LENGTH * n);
+            }
+        }
+        return data;
+    }
 
     private Integer getStartInRecord(int channelNumber) {
         int startInRecord = 0;
         for (int i = 0; i < channelNumber; i++) {
-            startInRecord += numberOfSamples.get(i) * 3;
+            startInRecord += header.getNumberOfSample(i) * SAMPLE_LENGTH;
         }
         return startInRecord;
-    }
-    
-    public void printHeader() {
-        System.out.println("headerType:" + headerType);
-        System.out.println("patient:" + patient);
-        System.out.println("recording:" + recording);
-        System.out.println("startDate:" + startDate);
-        System.out.println("startTime:" + startTime);
-        System.out.println("numberOfBytes:" + numberOfBytes);
-        System.out.println("version:" + version);
-        System.out.println("numberOfDataRecords:" + numberOfDataRecords);
-        System.out.println("durationOfDataRecord:" + durationOfDataRecord);
-        System.out.println("numberOfChannels:" + numberOfChannels);
-        System.out.println("labelsOfTheChannels:" + labelsOfTheChannels);
-        System.out.println("transducerTypes:" + transducerTypes);
-        System.out.println("physicalDimensionOfChannels:" + physicalDimensionOfChannels);
-        System.out.println("physicalMinimums:" + physicalMinimums);
-        System.out.println("physicalMaximums:" + physicalMaximums);
-        System.out.println("digitalMinimums:" + digitalMinimums);
-        System.out.println("digitalMaximums:" + digitalMaximums);
-        System.out.println("prefilterings:" + prefilterings);
-        System.out.println("numberOfSamples:" + numberOfSamples);
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public Integer getHeaderType() {
-        return headerType;
-    }
-
-    public String getPatient() {
-        return patient;
-    }
-
-    public String getRecording() {
-        return recording;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public Integer getNumberOfBytes() {
-        return numberOfBytes;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public Integer getHeaderSize() {
-        return headerSize;
-    }
-
-    public Integer getNumberOfDataRecords() {
-        return numberOfDataRecords;
-    }
-
-    public Integer getDurationOfDataRecord() {
-        return durationOfDataRecord;
-    }
-
-    public Integer getNumberOfChannels() {
-        return numberOfChannels;
-    }
-
-    public List<String> getLabelsOfTheChannels() {
-        return labelsOfTheChannels;
-    }
-
-    public List<String> getTransducerTypes() {
-        return transducerTypes;
-    }
-
-    public List<String> getPhysicalDimensionOfChannels() {
-        return physicalDimensionOfChannels;
-    }
-
-    public List<Integer> getPhysicalMinimums() {
-        return physicalMinimums;
-    }
-
-    public List<Integer> getPhysicalMaximums() {
-        return physicalMaximums;
-    }
-
-    public List<Integer> getDigitalMinimums() {
-        return digitalMinimums;
-    }
-
-    public List<Integer> getDigitalMaximums() {
-        return digitalMaximums;
-    }
-
-    public List<String> getPrefilterings() {
-        return prefilterings;
-    }
-
-    public List<Integer> getNumberOfSamples() {
-        return numberOfSamples;
-    }
-
-    public List<Channel> getChannels() {
-        return channels;
-    }
-
-    public Integer getStartData() {
-        return startData;
-    }
-
-    public Integer getDataRecordSize() {
-        return dataRecordSize;
     }
 
 }

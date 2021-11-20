@@ -4,18 +4,18 @@
  */
 package edf_filereader;
 
-import edf_filereader.header.EEG_Header;
-import edf_filereader.data.Channel_Simplified;
 import edf_filereader.data.ContinuousData;
+import edf_filereader.data.Channel;
+import edf_filereader.header.EEG_Header;
 import java.io.IOException;
 
-abstract class EEG_Class {
+abstract class EEG_File {
     
     public EEG_Header header;
     
     public abstract void readHeader();
     
-    public abstract Channel_Simplified getChannel(int channelNumber) throws IOException, InterruptedException;
+    public abstract Channel getChannel(int channelNumber) throws IOException, InterruptedException;
     
     public abstract ContinuousData readRecordFromTo(int from, int to) throws IOException;
 
@@ -24,8 +24,8 @@ abstract class EEG_Class {
     }
     
 
-    public static EEG_Class build(String fileName){
-        return new BDF_File_Simplified(fileName);
+    public static EEG_File build(String fileName){
+        return new BDF_File(fileName);
     }
     
 }

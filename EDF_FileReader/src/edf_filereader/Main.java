@@ -4,8 +4,6 @@
  */
 package edf_filereader;
 
-import edf_filereader.data.Channel_Simplified;
-import edf_filereader.data.Sample;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

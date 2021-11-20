@@ -12,11 +12,11 @@ import java.util.List;
  */
 public class ContinuousData {
 
-    public Channel_Simplified[] channels;
+    public Channel[] channels;
 
-     public ContinuousData(){
-         
-     }
+    public ContinuousData(){
+
+    }
     
     public ContinuousData(
             int storedRecordNumber,
@@ -29,11 +29,12 @@ public class ContinuousData {
             List<Integer> digitalMinimums,
             List<Integer> digitalMaximums,
             List<String> prefilterings,
-            List<Integer> numberOfSamples
+            List<Integer> numberOfSamples,
+            int sampleLength
     ) {
-        channels = new Channel_Simplified[channelNumber];
+        channels = new Channel[channelNumber];
         for (int i=0;i<channelNumber;i++) {
-            channels[i] = new Channel_Simplified(labelsOfTheChannels.get(i),
+            channels[i] = new Channel(labelsOfTheChannels.get(i),
                     transducerTypes.get(i),
                     physicalDimensionOfChannels.get(i),
                     physicalMinimums.get(i),
@@ -42,9 +43,27 @@ public class ContinuousData {
                     digitalMaximums.get(i),
                     prefilterings.get(i),
                     numberOfSamples.get(i),
-                    storedRecordNumber
+                    storedRecordNumber,
+                    sampleLength
             );
         }
     }
+    
+    public int[][] getIntArray(){
+        int[][] arr = new int[channels.length][];
+        for (int i=0;i<channels.length;i++) {
+            arr[i] = channels[i].getIntArray();
+        }
+        return arr;
+    }
+    
+    public double[][] getDoubleArray(){
+        double[][] arr = new double[channels.length][];
+        for (int i=0;i<channels.length;i++) {
+            arr[i] = channels[i].getDoubleArray();
+        }
+        return arr;
+    }
+
 
 }
