@@ -1,11 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package edf_filereader;
 
+import edf_filereader.exceptions.UsupportedFileFormatException;
 import edf_filereader.data.ContinuousData;
 import edf_filereader.data.Channel;
+import edf_filereader.file.EEG_File;
 import java.io.IOException;
 
 /**
@@ -14,11 +12,11 @@ import java.io.IOException;
  */
 public class Test {
 
-    public static void testChannel(int cahannelNumber, String fileName) throws IOException, EDFreader.EDFException, InterruptedException {
-        EEG_File myReader = EEG_File.build("dsa.bdf");
+    public static void testChannel(int cahannelNumber, String fileName) throws IOException, EDFreader.EDFException, InterruptedException, UsupportedFileFormatException {
+        EEG_File myReader = EEG_File.build(fileName);
         System.out.println(myReader.getClass());
         System.out.println(myReader.getHeader().getKeys());
-        EDFreader edfReader = new EDFreader("dsa.bdf");
+        EDFreader edfReader = new EDFreader(fileName);
 
         double[] doubleArray = myReader.getChannel(cahannelNumber).getDoubleArray();
         double[] doubleArray2 = new double[myReader.getHeader().getNumberOfSample(cahannelNumber) * myReader.getHeader().getNumberOfDataRecords()];
@@ -33,8 +31,8 @@ public class Test {
     }
 
 
-    public void testRecord() throws IOException, EDFreader.EDFException, InterruptedException {
-        EEG_File myReader = EEG_File.build("dsa.bdf");
+    public void testRecord(String fileName) throws IOException, EDFreader.EDFException, InterruptedException, UsupportedFileFormatException {
+        EEG_File myReader = EEG_File.build(fileName);
         ContinuousData data = myReader.readRecordFromTo(0, myReader.getHeader().getNumberOfDataRecords());
 
         for (int cahannelNumber = 0; cahannelNumber < myReader.getHeader().getNumberOfChannels(); cahannelNumber++) {
@@ -51,7 +49,7 @@ public class Test {
         }
     }
 
-    public static void readFullFile(String fileName) throws IOException, EDFreader.EDFException, InterruptedException {
+    public static void readFullFile(String fileName) throws IOException, EDFreader.EDFException, InterruptedException, UsupportedFileFormatException {
         //clearMemoryMappoings();
        
         System.out.println("myReader");

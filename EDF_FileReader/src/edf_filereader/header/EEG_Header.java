@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package edf_filereader.header;
 
 import java.nio.channels.FileChannel;
@@ -23,10 +19,10 @@ public abstract class EEG_Header {
     protected List<String> labelsOfTheChannels;
     protected List<String> transducerTypes;
     protected List<String> physicalDimensionOfChannels;
-    protected List<Integer> physicalMinimums;
-    protected List<Integer> physicalMaximums;
-    protected List<Integer> digitalMinimums;
-    protected List<Integer> digitalMaximums;
+    protected List<Double> physicalMinimums;
+    protected List<Double> physicalMaximums;
+    protected List<Double> digitalMinimums;
+    protected List<Double> digitalMaximums;
     protected List<String> prefilterings;
     protected List<Integer> numberOfSamples;
     
@@ -92,35 +88,35 @@ public abstract class EEG_Header {
         this.physicalDimensionOfChannels = physicalDimensionOfChannels;
     }
 
-    public Integer getPhysicalMinimum(int channelNumber) {
+    public Double getPhysicalMinimum(int channelNumber) {
         return physicalMinimums.get(channelNumber);
     }
 
-    public void setPhysicalMinimums(List<Integer> physicalMinimums) {
+    public void setPhysicalMinimums(List<Double> physicalMinimums) {
         this.physicalMinimums = physicalMinimums;
     }
 
-    public Integer getPhysicalMaximum(int channelNumber) {
+    public Double getPhysicalMaximum(int channelNumber) {
         return physicalMaximums.get(channelNumber);
     }
 
-    public void setPhysicalMaximums(List<Integer> physicalMaximums) {
+    public void setPhysicalMaximums(List<Double> physicalMaximums) {
         this.physicalMaximums = physicalMaximums;
     }
 
-    public Integer getDigitalMinimum(int channelNumber) {
+    public Double getDigitalMinimum(int channelNumber) {
         return digitalMinimums.get(channelNumber);
     }
 
-    public void setDigitalMinimums(List<Integer> digitalMinimums) {
+    public void setDigitalMinimums(List<Double> digitalMinimums) {
         this.digitalMinimums = digitalMinimums;
     }
 
-    public Integer getDigitalMaximum(int channelNumber) {
+    public Double getDigitalMaximum(int channelNumber) {
         return digitalMaximums.get(channelNumber);
     }
 
-    public void setDigitalMaximums(List<Integer> digitalMaximums) {
+    public void setDigitalMaximums(List<Double> digitalMaximums) {
         this.digitalMaximums = digitalMaximums;
     }
 
@@ -152,19 +148,19 @@ public abstract class EEG_Header {
         return physicalDimensionOfChannels;
     }
 
-    public List<Integer> getPhysicalMinimums() {
+    public List<Double> getPhysicalMinimums() {
         return physicalMinimums;
     }
 
-    public List<Integer> getPhysicalMaximums() {
+    public List<Double> getPhysicalMaximums() {
         return physicalMaximums;
     }
 
-    public List<Integer> getDigitalMinimums() {
+    public List<Double> getDigitalMinimums() {
         return digitalMinimums;
     }
 
-    public List<Integer> getDigitalMaximums() {
+    public List<Double> getDigitalMaximums() {
         return digitalMaximums;
     }
 

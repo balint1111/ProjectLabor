@@ -6,13 +6,13 @@ import java.util.HashMap;
  *
  * @author balin
  */
-public class BDF_Header extends EEG_Header{
+public class EDF_Header extends EEG_Header{
     
     
     private Integer startData;
     private Integer dataRecordSize;
     
-    public BDF_Header(){
+    public EDF_Header(){
         extraParameters = new HashMap<>();
     }
     
