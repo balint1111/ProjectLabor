@@ -172,7 +172,7 @@ public abstract class EEG_Header {
         return numberOfSamples;
     }
 
-    public Map<String, Object> getScpecificValues() {
+    public Map<String, Object> getExtraParameters() {
         return extraParameters;
     }
     
