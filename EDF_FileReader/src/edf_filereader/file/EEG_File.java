@@ -18,22 +18,21 @@ public abstract class EEG_File {
     
     public abstract Channel getChannel(int channelNumber) throws IOException, InterruptedException;
     
-    public abstract ContinuousData readRecordFromTo(int from, int to) throws IOException;
+    public abstract ContinuousData readRecordFromTo(int from, int to) throws IOException, InterruptedException;
 
     public EEG_Header getHeader() {
         return header;
     }
     
 
-    public static EEG_File build(String fileName) throws UsupportedFileFormatException, FileNotFoundException{
-        String extension = fileName.substring(fileName.lastIndexOf(".")+1);
+    public static EEG_File build(String path) throws UsupportedFileFormatException, FileNotFoundException{
+        String extension = path.substring(path.lastIndexOf(".")+1);
         EEG_File ret;
         switch (extension){
-            case "bdf" -> ret = new BDF_File(fileName);
-            case "edf" -> ret = new EDF_File(fileName);
+            case "bdf" -> ret = new BDF_File(path);
+            case "edf" -> ret = new EDF_File(path);
             default -> throw new UsupportedFileFormatException("Unsupported extension: " + extension);
         }
-        System.out.println(extension);
         return ret;
     }
     

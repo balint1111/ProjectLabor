@@ -4,6 +4,7 @@ import edf_filereader.exceptions.UsupportedFileFormatException;
 import edf_filereader.data.ContinuousData;
 import edf_filereader.data.Channel;
 import edf_filereader.file.EEG_File;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -14,8 +15,8 @@ public class Test {
 
     public static void testChannel(int cahannelNumber, String fileName) throws IOException, EDFreader.EDFException, InterruptedException, UsupportedFileFormatException {
         EEG_File myReader = EEG_File.build(fileName);
-        System.out.println(myReader.getClass());
-        System.out.println(myReader.getHeader().getKeys());
+//        System.out.println(myReader.getClass());
+//        System.out.println(myReader.getHeader().getKeys());
         EDFreader edfReader = new EDFreader(fileName);
 
         double[] doubleArray = myReader.getChannel(cahannelNumber).getDoubleArray();
@@ -31,7 +32,7 @@ public class Test {
     }
 
 
-    public void testRecord(String fileName) throws IOException, EDFreader.EDFException, InterruptedException, UsupportedFileFormatException {
+    public static void testRecord(String fileName) throws IOException, EDFreader.EDFException, InterruptedException, UsupportedFileFormatException {
         EEG_File myReader = EEG_File.build(fileName);
         ContinuousData data = myReader.readRecordFromTo(0, myReader.getHeader().getNumberOfDataRecords());
 
@@ -50,36 +51,39 @@ public class Test {
     }
 
     public static void readFullFile(String fileName) throws IOException, EDFreader.EDFException, InterruptedException, UsupportedFileFormatException {
-        //clearMemoryMappoings();
+//        clearMemoryMappoings();
+        
+        long fileSizeInBytes = new File(fileName).length();
        
         System.out.println("myReader");
-        long currentTimeMillis = currentTimeMillis = System.currentTimeMillis();
+        long currentTimeMillis = System.currentTimeMillis();
+        
         EEG_File myReader = EEG_File.build(fileName);
-        System.out.println(myReader.getClass());
-        
-        Channel[] channels = myReader.readRecordFromTo(0, myReader.getHeader().getNumberOfDataRecords()).channels;
-        
-        for (Channel channel : channels) {
-            channel.getDoubleArray();
-        }
-
-        currentTimeMillis = System.currentTimeMillis() - currentTimeMillis;
-        System.out.println(currentTimeMillis);
-        
-        //clearMemoryMappoings();
+        double[][] myArr = myReader.readRecordFromTo(0, myReader.getHeader().getNumberOfDataRecords()).getDoubleArray();
         
 
-        System.out.println("edfReader");
-        currentTimeMillis = currentTimeMillis = System.currentTimeMillis();
-        
-        EDFreader eDFreader = new EDFreader(fileName);
-        for(int i=0;i<eDFreader.getNumSignals();i++){
-            double[] buf;
-            buf = new double[(int)eDFreader.getSampelsPerDataRecord(i)*(int)eDFreader.getNumDataRecords()];
-            eDFreader.readPhysicalSamples(i, buf);
-        }
         currentTimeMillis = System.currentTimeMillis() - currentTimeMillis;
+        double sec = ((double)currentTimeMillis/1000);
+        double bytesPerSec = ((double)fileSizeInBytes/sec);
         System.out.println(currentTimeMillis);
+        System.out.println(sec);
+        System.out.printf("%.0f byte/sec\n",bytesPerSec);
+        System.out.printf("%.0f MB/sec\n",bytesPerSec/(1024*1024));
+        
+//        clearMemoryMappoings();
+        
+
+//        System.out.println("edfReader");
+//        currentTimeMillis = currentTimeMillis = System.currentTimeMillis();
+//        
+//        EDFreader eDFreader = new EDFreader(fileName);
+//        for(int i=0;i<eDFreader.getNumSignals();i++){
+//            double[] buf;
+//            buf = new double[(int)eDFreader.getSampelsPerDataRecord(i)*(int)eDFreader.getNumDataRecords()];
+//            eDFreader.readPhysicalSamples(i, buf);
+//        }
+//        currentTimeMillis = System.currentTimeMillis() - currentTimeMillis;
+//        System.out.println(currentTimeMillis);
     }
     
     public static void clearMemoryMappoings() throws IOException, InterruptedException{

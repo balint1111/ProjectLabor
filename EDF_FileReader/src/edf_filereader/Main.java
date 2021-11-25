@@ -11,16 +11,15 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) throws InterruptedException {
         try {
+            Test.readFullFile("F:\\dsa.bdf");
+            
 //            for(int i=0;i<129;i++){
-//                Test.testChannel(i);
+//                Test.testChannel(i,"ma0844az_1-1+.edf");
 //            }
             
-            Test.testChannel(0,"ma0844az_1-1+.edf");
+//            Test.testChannel(128,"dsa.bdf");
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (EDFreader.EDFException ex) {

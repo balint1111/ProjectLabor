@@ -73,7 +73,7 @@ public class Channel{
     
     private Integer getInt(int sampleNumber){
         Integer value = 0;
-        for(int i = 0;i < 2 ;i++){
+        for(int i = 0;i < sampleLength-1 ;i++){
             value |= (data[sampleNumber*sampleLength + i] & 0xFF) << (8*i);
         }
         value |= (data[sampleNumber*sampleLength + sampleLength-1]) << (8*(sampleLength-1));
