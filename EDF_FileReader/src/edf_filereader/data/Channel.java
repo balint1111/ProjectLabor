@@ -1,5 +1,7 @@
 package edf_filereader.data;
 
+import java.io.UnsupportedEncodingException;
+
 
 /**
  *
@@ -69,6 +71,15 @@ public class Channel{
             arr[i] = bitvalue * (offset + (double) getInt(i));
         }
         return arr;
+    }
+    
+    public String[] getAnnotations() throws UnsupportedEncodingException{
+        int annotationLength = numberOfSamples * sampleLength;
+        String[] ret = new String[numberOfSamples];
+        for (int i = 0; i < ret.length; i ++){
+            ret[i] = new String(data, i * annotationLength, annotationLength, "US-ASCII");
+        }
+        return ret;
     }
     
     private Integer getInt(int sampleNumber){

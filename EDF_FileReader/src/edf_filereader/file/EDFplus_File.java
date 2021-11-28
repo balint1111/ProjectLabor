@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 public class EDFplus_File extends EEG_File {
 
     private static final int SAMPLE_LENGTH = 2;
+    Integer annotationChannelNumber = null;
 
 
     public EDFplus_File(String filename) throws FileNotFoundException {
@@ -106,6 +107,13 @@ public class EDFplus_File extends EEG_File {
                 dataRecordSize += header.getNumberOfSample(i) * SAMPLE_LENGTH;
             }
             getHeader().setDataRecordSize(dataRecordSize);
+            
+
+            for (int i = 0; i < getHeader().getNumberOfChannels(); i++){
+                if (getHeader().getLabelsOfTheChannels(i).equals("EDF Annotations")){
+                    annotationChannelNumber = i;
+                }
+            }
 
         } catch (IOException ex) {
             Logger.getLogger(EDF_File.class.getName()).log(Level.SEVERE, null, ex);
@@ -152,10 +160,9 @@ public class EDFplus_File extends EEG_File {
         int start = getHeader().getStartData() + from * getHeader().getDataRecordSize();
         ByteBuffer buffer = ByteBuffer.allocate(getHeader().getDataRecordSize() * (length));
         header.getFileChannel().read(buffer, start);
-        System.out.println(SAMPLE_LENGTH);
         ContinuousData data = new ContinuousData(length, header.getNumberOfChannels(), header.getLabelsOfTheChannels(), header.getTransducerTypes(),
                 header.getPhysicalDimensionOfChannels(), header.getPhysicalMinimums(), header.getPhysicalMaximums(),
-                header.getDigitalMinimums(), header.getDigitalMaximums(), header.getPrefilterings(), header.getNumberOfSamples(), SAMPLE_LENGTH);
+                header.getDigitalMinimums(), header.getDigitalMaximums(), header.getPrefilterings(), header.getNumberOfSamples(), SAMPLE_LENGTH, annotationChannelNumber);
 
         for (int channelNumber = 0; channelNumber < header.getNumberOfChannels(); channelNumber++) {
             for (int recordNumber = 0; recordNumber < length; recordNumber++) {
@@ -179,28 +186,11 @@ public class EDFplus_File extends EEG_File {
     public String[] getAnnotations() throws IOException {
 
         List<String> labelsOfTheChannels = getHeader().getLabelsOfTheChannels();
-        Integer channel = null;
 
-        for (int i = 0; i < labelsOfTheChannels.size(); i++){
-
-            if (labelsOfTheChannels.get(i).equals("EDF Annotations")){
-                channel = i;
-            }
-
-        }
-
-        Channel channel1 = new Channel();
-        readBytesToChannel(channel, channel1, 0, getHeader().getNumberOfDataRecords());
-
-        int annotationLength = getHeader().getNumberOfSamples().get(channel) * SAMPLE_LENGTH;
-
-        String[] ret = new String[getHeader().getNumberOfSample(channel)];
-        for (int i = 0; i < ret.length; i ++){
-
-            ret[i] = new String(channel1.data, i * annotationLength, annotationLength, "US-ASCII");
-        }
-
-        return ret;
+        Channel channel = new Channel();
+        readBytesToChannel(annotationChannelNumber, channel, 0, getHeader().getNumberOfDataRecords());
+        
+        return channel.getAnnotations();
     }
 
 }

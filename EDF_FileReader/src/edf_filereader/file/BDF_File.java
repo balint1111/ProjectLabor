@@ -155,7 +155,7 @@ public class BDF_File extends EEG_File{
         System.out.println(SAMPLE_LENGTH);
         ContinuousData data = new ContinuousData(length, header.getNumberOfChannels(), header.getLabelsOfTheChannels(), header.getTransducerTypes(),
                 header.getPhysicalDimensionOfChannels(), header.getPhysicalMinimums(), header.getPhysicalMaximums(),
-                header.getDigitalMinimums(), header.getDigitalMaximums(), header.getPrefilterings(), header.getNumberOfSamples(), SAMPLE_LENGTH);
+                header.getDigitalMinimums(), header.getDigitalMaximums(), header.getPrefilterings(), header.getNumberOfSamples(), SAMPLE_LENGTH, -1);
         
         for (int channelNumber = 0; channelNumber < header.getNumberOfChannels(); channelNumber++) {
             for (int recordNumber = 0; recordNumber < length; recordNumber++) {

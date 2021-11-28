@@ -1,5 +1,6 @@
 package edf_filereader.data;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -9,6 +10,7 @@ import java.util.List;
 public class ContinuousData {
 
     public Channel[] channels;
+    private int annotationChannelNumber=-1;
 
     public ContinuousData(){
 
@@ -26,8 +28,10 @@ public class ContinuousData {
             List<Double> digitalMaximums,
             List<String> prefilterings,
             List<Integer> numberOfSamples,
-            int sampleLength
+            int sampleLength,
+            int annotationChannelNumber
     ) {
+        this.annotationChannelNumber = annotationChannelNumber;
         channels = new Channel[channelNumber];
         for (int i=0;i<channelNumber;i++) {
             channels[i] = new Channel(labelsOfTheChannels.get(i),
@@ -48,7 +52,9 @@ public class ContinuousData {
     public int[][] getIntArray(){
         int[][] arr = new int[channels.length][];
         for (int i=0;i<channels.length;i++) {
-            arr[i] = channels[i].getIntArray();
+            if(i != annotationChannelNumber){
+                arr[i] = channels[i].getIntArray();
+            }
         }
         return arr;
     }
@@ -56,9 +62,18 @@ public class ContinuousData {
     public double[][] getDoubleArray(){
         double[][] arr = new double[channels.length][];
         for (int i=0;i<channels.length;i++) {
-            arr[i] = channels[i].getDoubleArray();
+            if(i != annotationChannelNumber){
+                arr[i] = channels[i].getDoubleArray();
+            }
         }
         return arr;
+    }
+    
+    public String[] getAnnotations() throws UnsupportedEncodingException{
+        if(annotationChannelNumber >= 0){
+            return channels[annotationChannelNumber].getAnnotations();
+        }
+        return new String[0]; 
     }
 
 
