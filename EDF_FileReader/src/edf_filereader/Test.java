@@ -1,7 +1,7 @@
 package edf_filereader;
 
 import edf_filereader.exceptions.UsupportedFileFormatException;
-import edf_filereader.data.ContinuousData;
+import edf_filereader.data.EEG_Data;
 import edf_filereader.data.Channel;
 import edf_filereader.file.EEG_File;
 import java.io.File;
@@ -34,7 +34,7 @@ public class Test {
 
     public static void testRecord(String fileName) throws IOException, EDFreader.EDFException, InterruptedException, UsupportedFileFormatException {
         EEG_File myReader = EEG_File.build(fileName);
-        ContinuousData data = myReader.readRecordFromTo(0, myReader.getHeader().getNumberOfDataRecords());
+        EEG_Data data = myReader.readRecordFromTo(0, myReader.getHeader().getNumberOfDataRecords());
 
         for (int cahannelNumber = 0; cahannelNumber < myReader.getHeader().getNumberOfChannels(); cahannelNumber++) {
             double[] doubleArray = data.channels[cahannelNumber].getDoubleArray();

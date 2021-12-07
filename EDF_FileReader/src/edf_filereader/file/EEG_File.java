@@ -1,7 +1,7 @@
 package edf_filereader.file;
 
 import edf_filereader.exceptions.UsupportedFileFormatException;
-import edf_filereader.data.ContinuousData;
+import edf_filereader.data.EEG_Data;
 import edf_filereader.data.Channel;
 import edf_filereader.header.EEG_Header;
 import java.io.FileNotFoundException;
@@ -18,7 +18,7 @@ public abstract class EEG_File {
     
     public abstract Channel getChannel(int channelNumber) throws IOException, InterruptedException;
     
-    public abstract ContinuousData readRecordFromTo(int from, int to) throws IOException, InterruptedException;
+    public abstract EEG_Data readRecordFromTo(int from, int to) throws IOException, InterruptedException;
 
     public EEG_Header getHeader() {
         return header;

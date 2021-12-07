@@ -13,7 +13,7 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         try {
-            Test.readFullFile("F:\\dsa.bdf");
+            Test.readFullFile("dsa.bdf");
             
 //            for(int i=0;i<129;i++){
 //                Test.testChannel(i,"ma0844az_1-1+.edf");

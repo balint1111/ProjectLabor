@@ -9,15 +9,15 @@ import java.util.concurrent.TimeUnit;
  *
  * @author balin
  */
-public class ContinuousData {
+public class EEG_Data {
 
     public Channel[] channels;
 
-    public ContinuousData(){
+    public EEG_Data(){
 
     }
     
-    public ContinuousData(
+    public EEG_Data(
             int storedRecordNumber,
             int channelNumber,
             List<String> labelsOfTheChannels,
