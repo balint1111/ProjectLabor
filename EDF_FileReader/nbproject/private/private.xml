@@ -3,13 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/EEG_File.java</file>
+            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/file/BDF_File.java</file>
             <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/header/EEG_Header.java</file>
+            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/header/EDF_Header.java</file>
             <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/Test.java</file>
-            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/data/ContinuousData.java</file>
-            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/header/BDF_Header.java</file>
-            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/BDF_File.java</file>
+            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/EDFreader.java</file>
+            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/file/EEG_File.java</file>
+            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/file/EDF_File.java</file>
             <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/Main.java</file>
+            <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/data/EEG_Data.java</file>
             <file>file:/H:/Git/ProjectLabor/EDF_FileReader/src/edf_filereader/data/Channel.java</file>
         </group>
     </open-files>

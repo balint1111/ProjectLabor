@@ -7,16 +7,16 @@ import java.util.List;
  *
  * @author balin
  */
-public class ContinuousData {
+public class EEG_Data {
 
     public Channel[] channels;
     private int annotationChannelNumber=-1;
 
-    public ContinuousData(){
+    public EEG_Data(){
 
     }
     
-    public ContinuousData(
+    public EEG_Data(
             int storedRecordNumber,
             int channelNumber,
             List<String> labelsOfTheChannels,

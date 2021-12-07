@@ -1,7 +1,7 @@
 package edf_filereader.file;
 
 import edf_filereader.data.Channel;
-import edf_filereader.data.ContinuousData;
+import edf_filereader.data.EEG_Data;
 import edf_filereader.header.EDF_Header;
 
 import java.io.FileInputStream;
@@ -155,12 +155,12 @@ public class EDFplus_File extends EEG_File {
     }
 
     @Override
-    public ContinuousData readRecordFromTo(int from, int to) throws IOException {
+    public EEG_Data readRecordFromTo(int from, int to) throws IOException {
         int length = to - from;
         int start = getHeader().getStartData() + from * getHeader().getDataRecordSize();
         ByteBuffer buffer = ByteBuffer.allocate(getHeader().getDataRecordSize() * (length));
         header.getFileChannel().read(buffer, start);
-        ContinuousData data = new ContinuousData(length, header.getNumberOfChannels(), header.getLabelsOfTheChannels(), header.getTransducerTypes(),
+        EEG_Data data = new EEG_Data(length, header.getNumberOfChannels(), header.getLabelsOfTheChannels(), header.getTransducerTypes(),
                 header.getPhysicalDimensionOfChannels(), header.getPhysicalMinimums(), header.getPhysicalMaximums(),
                 header.getDigitalMinimums(), header.getDigitalMaximums(), header.getPrefilterings(), header.getNumberOfSamples(), SAMPLE_LENGTH, annotationChannelNumber);
 

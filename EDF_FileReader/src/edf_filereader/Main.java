@@ -1,7 +1,7 @@
 package edf_filereader;
 
 import edf_filereader.EDFreader.EDFAnnotationStruct;
-import edf_filereader.data.ContinuousData;
+import edf_filereader.data.EEG_Data;
 import edf_filereader.exceptions.UsupportedFileFormatException;
 import edf_filereader.file.EDFplus_File;
 
@@ -29,7 +29,7 @@ public class Main {
             
 
             EDFplus_File edfplus = new EDFplus_File("test_generator_2.edf");
-            ContinuousData data = edfplus.readRecordFromTo(0, edfplus.getHeader().getNumberOfDataRecords());
+            EEG_Data data = edfplus.readRecordFromTo(0, edfplus.getHeader().getNumberOfDataRecords());
             System.out.println((int)data.getAnnotations()[0].charAt(25));
             System.out.println((char)20);
             for (EDFAnnotationStruct annotation : eDFreader.annotationslist) {
